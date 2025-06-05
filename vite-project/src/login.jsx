@@ -1,34 +1,37 @@
 import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const Login = () => {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
-  
-    
-    if (name !== '' && password !== '') {
-      fetch('http://localhost:4000/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, password }),
-      })
-        .then(res => { 
-          if(!res.ok){ 
-          
-            alert('invalid credentials')
-          }else{ 
-            window.location.href ='/dashboard'
-            alert(`helow wellcome  ${name}`);
-          }
-        })
-        .then(data => console.log(data))
-        .catch(err => console.error(err));
+  const handleSubmit = (e) => {
+    e.preventDefault(); // para hindi mag-reload page
+
+    if (name === '' || password === '') {
+      alert('Please enter both username and password');
+      return;
     }
 
-}
-
+    fetch('http://localhost:4000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, password }),
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Invalid credentials');
+        }
+        return res.json();
+      })
+      .then(data => {
+        alert(`Hello, welcome ${name}!`);
+        window.location.href = '/dashboard';
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -56,11 +59,16 @@ const Login = () => {
 
             <div>
               <label className="text-sm text-gray-600 font-semibold">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="p-3 w-full bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="p-3 w-full bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <button
-             onClick={handleSubmit}
+              type="submit"
               className="bg-[yellow] hover:bg-purple-700 text-black font-semibold py-3 rounded-xl transition duration-300"
             >
               Sign In
@@ -69,9 +77,9 @@ const Login = () => {
 
           <p className="text-sm text-center text-gray-500">
             No account?{' '}
-            <span className="text-purple-600 font-medium hover:underline cursor-pointer">
-              <Link to='/register' >register</Link>
-            </span>
+            <Link to="/register" className="text-purple-600 font-medium hover:underline cursor-pointer">
+              Register
+            </Link>
           </p>
         </div>
       </div>
