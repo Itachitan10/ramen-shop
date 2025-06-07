@@ -1,12 +1,17 @@
-import React from 'react'
+ import React from 'react';
 
-const display = () => {
-  return (
-    <div>
-      <h1>test</h1>
-    </div>
-  )
-}
+  import { ToastContainer, toast } from 'react-toastify';
+  
+  function Display(){
+    const notify = () => toast("Wow so easy!");
 
-export default display
+    return (
+      <div>
+        <button onClick={notify}>Notify!</button>
+        <ToastContainer />
+      </div>
+    );
+  }
 
+
+export default Display;

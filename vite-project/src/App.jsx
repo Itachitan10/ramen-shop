@@ -7,6 +7,7 @@ import Contact from './contact';
 import Login from './login';
 import Register from './register'
 import Product from './product'
+import Display from './display.jsx'
 
 
 const App = () => {
@@ -21,8 +22,7 @@ const App = () => {
            <Route path='/login' element={<Login/>} />
            <Route path='/Register' element={<Register/>} />
            <Route path='/dashboard/product' element={<Product/>}/>
-      
-      
+             <Route path='/display' element={<Display/>}/> 
         </Routes>
       </BrowserRouter>
     </>

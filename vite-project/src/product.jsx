@@ -1,22 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ShoppingCart, CreditCard } from 'lucide-react';
 
 const Product = () => {
   const [navOpen, setNavOpen] = useState(false);
-  const [product, setProduct] = useState([]);
+  const [product1, setProduct] = useState([]);
+  const [Search, setSearch] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:4000/product')
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error('Network response was not ok');
-        }
-      })
+      .then(res => res.ok ? res.json() : Promise.reject('Network response not ok'))
       .then(data => setProduct(data.product))
       .catch(err => console.error('Fetching error:', err));
   }, []);
+
+  const ali = product1.filter((itemsName) =>
+    itemsName.name.toLowerCase().includes(Search.toLowerCase())
+  );
+
+ 
+  const notifyAddCart = () => {
+    toast.success(
+      <div className="flex items-center gap-2">
+        <ShoppingCart size={20} /> Item added to cart!
+      </div>,
+      {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+        style: {
+          background: '#333',
+          color: '#fff',
+          borderRadius: '8px',
+          padding: '12px 16px',
+        },
+        icon: false
+      }
+    );
+  };
+
+  
+  const notifyBuyNow = () => {
+    toast.info(
+      <div className="flex items-center gap-2">
+        <CreditCard size={20} /> Proceeding to checkout!
+      </div>,
+      {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "colored",
+        style: {
+          background: '#444',
+          color: '#fff',
+          borderRadius: '8px',
+          padding: '12px 16px',
+        },
+        icon: false
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen w-screen bg-[#343634]">
@@ -59,11 +103,10 @@ const Product = () => {
             </svg>
           </button>
 
-          {/* Nav Links */}
+        
           <ul
-            className={` md:flex md:flex-row md:gap-2 absolute md:static top-full left-0 w-full md:w-auto bg-[#221f1f] md:bg-transparent text-center overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-              navOpen ? 'max-h-60 md:max-h-full' : 'max-h-0 md:max-h-full'
-            }`}
+            className={`md:flex md:flex-row md:gap-2 absolute md:static top-full left-0 w-full md:w-auto bg-[#221f1f] md:bg-transparent text-center overflow-hidden transition-[max-height] duration-300 ease-in-out ${navOpen ? 'max-h-60 md:max-h-full' : 'max-h-0 md:max-h-full'
+              }`}
           >
             {['About', 'Contact', 'Product'].map((item, idx) => (
               <li
@@ -78,60 +121,52 @@ const Product = () => {
         </nav>
       </div>
 
-      {/* Banner */}
       <div className="w-full h-64 bg-[url('https://i.ytimg.com/vi/NpawwQf0tiQ/maxresdefault.jpg')] bg-cover bg-center rounded-xl flex items-center justify-center">
         <h1 className="text-white text-4xl font-bold drop-shadow-lg">All Product</h1>
       </div>
 
-      {/* Main Content */}
+     
       <div className="max-w-5xl mx-auto p-4 space-y-6">
-
         <h2 className="text-2xl font-semibold text-white">Product Category</h2>
 
-        {/* Categories */}
         <div className="flex gap-4 mb-6">
           <button className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Coffee</button>
           <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Food</button>
           <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Ramen</button>
         </div>
 
-        {/* Search */}
         <div className="flex gap-2 mb-6">
           <input
             type="text"
             placeholder="Search product..."
             className="flex-1 px-4 py-2 border border-yellow-600 rounded-lg bg-transparent placeholder-yellow-300 text-white font-bold focus:outline-none focus:ring-2 focus:ring-yellow-600"
+            value={Search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <button className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">Search</button>
         </div>
 
-        {/* Product List */}
-        <div className="flex flex-wrap gap-6">
-          {product.map((item) => (
+    
+        <div className="flex flex-row flex-wrap gap-10 justify-center">
+          {ali.map((item) => (
             <div
               key={item.id}
-              className="w-40 bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105"
+              className="flex flex-col text-black transform transition duration-300 hover:scale-105 hover:shadow-xl rounded-2xl overflow-hidden bg-white"
             >
-              {/* Image — hide sa mobile */}
-              <div
-                className="h-32 bg-gray-200 bg-center bg-cover hidden sm:block"
-                style={{ backgroundImage: `url('${item.img}')` }}
-              ></div>
-
-              <div className="p-4">
-                <h3 className="text-gray-800 font-semibold mb-2">{item.name}</h3>
-                <p className="text-sm text-gray-500 mb-4">Category: {item.category}</p>
-
-                <div className="flex justify-between gap-2">
-                  <button className="flex-1 px-2 py-1.5 text-xs font-semibold bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition">Checkout</button>
-                  <button className="flex-1 px-2 py-1.5 text-xs font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition">Add to Cart</button>
+              <img src={item.img} alt="" className="h-30 w-50 object-cover" />
+              <div className="gap-3 p-2 flex flex-col justify-between h-full">
+                <p className="text-center font-bold text-sm py-2">{item.name}</p>
+                <p className="text-sm text-gray-700 text-center">₱: {item.price}</p>
+                <div className="flex justify-center gap-2 text-sm py-2">
+                  <button onClick={notifyAddCart} className="bg-[green] rounded-2xl w-20 text-white font-sans hover:bg-green-700">Add Cart</button>
+                  <button onClick={notifyBuyNow} className="bg-[yellow] rounded-2xl w-20 font-sans hover:bg-yellow-400">Buy Now</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 {
   "name": "vite-project",
-  "proxy" : "http://localhost:3000",
+  "proxy": "http://localhost:3000",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,16 +10,15 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-
-
-  
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
     "dom": "^0.0.3",
+    "lucide-react": "^0.513.0",
     "reac": "^0.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.1",
+    "react-toastify": "^11.0.5",
     "router": "^2.2.0",
     "tailwindcss": "^4.1.7"
   },

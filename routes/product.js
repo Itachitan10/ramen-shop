@@ -2,8 +2,6 @@ const express = require("express")
 const routes =express.Router()
 
 
-const router = express.Router();
-
 // Sample product data
 const products = [
   {
@@ -57,17 +55,11 @@ const products = [
 ];
 
 // Route for /product
-router.get("/product", (req, res) => {
-  res.json({ product: products });
-});
-
-module.exports = router;
 
 
 routes.get('/product' , (req, res)=>{ 
     res.json({product : products })
 })
-
 
 
 module.exports = routes
